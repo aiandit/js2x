@@ -25,11 +25,14 @@ class JSON2XMLPrinter:
     input = {}
     output = None
     level = 0
+    count = 0
     indent = None
     indentstr = ' '
 
     def __init__(self, output=sys.stdout):
         self.output = output
+        self.count = 0
+        self.level = 0
 
     def __call__(self, dict, name='dict'):
         self.input = dict
@@ -37,7 +40,7 @@ class JSON2XMLPrinter:
         self.dispatch(dict, name=name)
 
     def fill(self):
-        if self.indent:
+        if self.indent and self.count > 0:
             self.output.write('\n' + self.indentstr * self.level * self.indent)
         elif self.indent == 0:
             self.output.write('\n')
@@ -57,6 +60,7 @@ class JSON2XMLPrinter:
             attrstr = ' ' + attrstr
         self.output.write(f'<{name}{attrstr}>')
         self.level += 1
+        self.count += 1
     def wend(self, name, fill=True):
         self.level -= 1
         if fill:
@@ -75,7 +79,7 @@ class JSON2XMLPrinter:
         elif type(d) == type([]):
             self.wstart(name, {'_class': 'list'})
             for k in d:
-                self.dispatch(k)
+                self.dispatch(k, name='item')
             self.wend(name)
         elif type(d) == type(0) or type(d) == type(0.0):
             self.wstart(name)
@@ -88,10 +92,10 @@ class JSON2XMLPrinter:
             self.wend(name)
         elif type(d) == type(''):
             self.wstart(name)
-#            self.wstart('str')
+            self.wstart('str')
             self.write(escapejson(d.replace('&', '&amp;').replace('<', '&lt;')))
-#            self.wend('str', False)
-            self.wend(name, False)
+            self.wend('str', False)
+            self.wend(name)
         else:
             self.wstart(name)
             self.write(json.dumps(d))

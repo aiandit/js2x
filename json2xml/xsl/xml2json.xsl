@@ -1,6 +1,6 @@
 <!--
  Transform arbitrary XML to JSON.
- (c) 2023 Johannes Willkomm
+ (c) 2023-2025 Johannes Willkomm
 
  #TODO: Proper pretty printing
 -->
@@ -11,14 +11,20 @@
   <xsl:param name="indentstr" select="''"/>
   <xsl:param name="spacer" select="substring($indentstr, 1, 1)"/>
 
-  <xsl:template match="/*" mode="indentstr"/>
+  <xsl:template match="/" mode="indentstr"/>
   <xsl:template match="*" mode="indentstr">
     <xsl:value-of select="$indentstr"/>
     <xsl:apply-templates select=".." mode="indentstr"/>
   </xsl:template>
 
+  <xsl:template match="/" mode="indent">
+    <xsl:if test="$indent">
+      <xsl:text>&#xa;</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template match="*|@*" mode="indent">
-    <xsl:if test="$indent and count(ancestor::*) > 0">
+    <xsl:if test="$indent and ..">
       <xsl:text>&#xa;</xsl:text>
       <xsl:apply-templates select="." mode="indentstr"/>
     </xsl:if>
@@ -27,10 +33,12 @@
   <xsl:template match="/">
     <xsl:text>{</xsl:text>
     <xsl:apply-templates/>
+    <xsl:apply-templates select="." mode="indent"/>
     <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template match="*">
+    <xsl:apply-templates select="." mode="indent"/>
     <xsl:text>"</xsl:text>
     <xsl:value-of select="local-name()"/>
     <xsl:text>":</xsl:text>
@@ -40,7 +48,9 @@
     <xsl:text>"</xsl:text>
     <xsl:if test="count(following-sibling::*) > 0">
       <xsl:text>,</xsl:text>
-      <xsl:value-of select="$spacer"/>
+      <xsl:if test="not($indent)">
+        <xsl:value-of select="$spacer"/>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 
@@ -52,6 +62,7 @@
     <xsl:value-of select="$spacer"/>
     <xsl:text>{</xsl:text>
     <xsl:apply-templates select="*"/>
+    <xsl:apply-templates select="." mode="indent"/>
     <xsl:text>}</xsl:text>
     <xsl:if test="@_class">
       <xsl:if test="*">
@@ -66,6 +77,9 @@
     </xsl:if>
     <xsl:if test="count(following-sibling::*) > 0">
       <xsl:text>,</xsl:text>
+      <xsl:if test="not($indent)">
+        <xsl:value-of select="$spacer"/>
+      </xsl:if>
     </xsl:if>
   </xsl:template>
 

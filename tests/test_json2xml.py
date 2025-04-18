@@ -3,7 +3,7 @@ import os
 import json
 import unittest
 
-import json2xml
+import js2x as json2xml
 
 def read_file(filename):
     with open(filename, "r") as pyfile:

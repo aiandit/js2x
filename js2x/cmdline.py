@@ -5,17 +5,17 @@ from . import *
 from . import __version__
 
 infos = dict(
-    json2xml=dict(func=lambda x, y, **kw: json2xml(x, filename=y, **kw),
-                    desc="Convert JSON to XML (json2xml)")
-    , xml2json=dict(func=lambda x, y, **kw: xml2json(x, filename=y, **kw),
-                    desc="Convert XML to JSON (json2xml)")
+    js2x=dict(func=lambda x, y, **kw: json2xml(x, filename=y, **kw),
+                    desc="Convert JSON to XML (JS2X)")
+    , x2js=dict(func=lambda x, y, **kw: xml2json(x, filename=y, **kw),
+                    desc="Convert XML to JSON (JS2X)")
 )
 
 def json2xmlrun():
-    run(prog="json2xml")
+    run(prog="js2x")
 
 def xml2jsonrun():
-    run(prog="xml2json")
+    run(prog="x2js")
 
 def getparser(prog, description='What the program does', parser=None):
     if parser is None:

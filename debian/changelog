@@ -1,6 +1,6 @@
-json2xml (25.1-1) unstable; urgency=medium
+js2x (25.1-1) unstable; urgency=medium
 
-  * First version 25.1 of Json2xml
+  * First version 25.1 of JS2X
   * Factored out from astunparse (https://github.com/aiandit/astunparse)
 
  -- Johannes Willkomm <johannes.willkomm@googlemail.com>  Fri, 18 Apr 2025 13:15:07 +0200

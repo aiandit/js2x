@@ -1,4 +1,4 @@
-Source: json2xml
+Source: js2x
 Section: misc
 Priority: optional
 Maintainer: Johannes Willkomm <j.willkomm@ai-and-it.de>
@@ -8,7 +8,7 @@ Standards-Version: 4.5.1
 Homepage: https://ai-and-it.de/
 Rules-Requires-Root: no
 
-Package: python3-json2xml
+Package: python3-js2x
 Architecture: all
 Depends: ${python3:Depends}, ${misc:Depends}, python3
 Description: Simple JSON to XML transform and back

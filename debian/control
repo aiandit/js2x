@@ -3,7 +3,7 @@ Section: misc
 Priority: optional
 Maintainer: Johannes Willkomm <j.willkomm@ai-and-it.de>
 Build-Depends: debhelper-compat (= 13), dh-python, python3-all,
- python3-build, pybuild-plugin-pyproject, python3-hatchling
+ python3-build, pybuild-plugin-pyproject, python3-hatchling, ${python3:Depends}
 Standards-Version: 4.5.1
 Homepage: https://ai-and-it.de/
 Rules-Requires-Root: no

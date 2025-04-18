@@ -1,0 +1,20 @@
+<a>
+  <b>
+    <empty/>
+  </b>
+  <b>
+    <empty/>
+    <num>1.23</num>
+    <c>
+      <empty test="22"/>
+      <num>2.34</num>
+      <str>test</str>
+    </c>
+    <str>test</str>
+  </b>
+  <b>
+    <empty test="22"/>
+    <num>2.34</num>
+    <str>test</str>
+  </b>
+</a>

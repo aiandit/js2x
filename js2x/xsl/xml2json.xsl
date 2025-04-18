@@ -43,9 +43,16 @@
     <xsl:value-of select="local-name()"/>
     <xsl:text>":</xsl:text>
     <xsl:value-of select="$spacer"/>
-    <xsl:text>"</xsl:text>
-    <xsl:value-of select="."/>
-    <xsl:text>"</xsl:text>
+    <xsl:choose>
+      <xsl:when test="text()">
+        <xsl:text>"</xsl:text>
+        <xsl:value-of select="."/>
+        <xsl:text>"</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>{}</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:if test="count(following-sibling::*) > 0">
       <xsl:text>,</xsl:text>
       <xsl:if test="not($indent)">
@@ -83,17 +90,66 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="*[str|num and count(*) = 1]">
+  <xsl:template match="text()" mode="in-list"/>
+
+  <xsl:template match="item" mode="in-list">
+    <xsl:apply-templates select="*" mode="in-list"/>
+  </xsl:template>
+
+  <xsl:template match="*[* or @_class]" mode="in-list">
+    <xsl:text>{</xsl:text>
     <xsl:apply-templates select="*"/>
+    <xsl:apply-templates select="." mode="indent"/>
+    <xsl:text>}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="item[not(*)]" mode="in-list">
+    <xsl:text>{}</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="*" mode="in-list">
+    <xsl:apply-templates select="."/>
+  </xsl:template>
+
+  <xsl:template match="*[str|num and count(*) = 1]" mode="in-list">
+    <xsl:apply-templates select="*"/>
+  </xsl:template>
+
+  <xsl:template match="*[str|num and count(*) = 1]">
+    <xsl:apply-templates select="." mode="indent"/>
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="local-name()"/>
+    <xsl:text>":</xsl:text>
+    <xsl:value-of select="$spacer"/>
+    <xsl:apply-templates select="*"/>
+    <xsl:if test="count(following-sibling::*) > 0">
+      <xsl:text>,</xsl:text>
+      <xsl:value-of select="$spacer"/>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="str[count(../*)=1]">
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="."/>
+    <xsl:text>"</xsl:text>
+  </xsl:template>
+
+  <xsl:template match="num[count(../*)=1]">
+    <xsl:value-of select="."/>
   </xsl:template>
 
   <xsl:template match="*[@_class = 'list']">
     <xsl:apply-templates select="." mode="indent"/>
+    <xsl:text>"</xsl:text>
+    <xsl:value-of select="local-name()"/>
+    <xsl:text>":</xsl:text>
+    <xsl:value-of select="$spacer"/>
     <xsl:text>[</xsl:text>
     <xsl:for-each select="*">
-      <xsl:apply-templates select="."/>
+      <xsl:apply-templates select="." mode="in-list"/>
       <xsl:if test="position() != last()">
         <xsl:text>,</xsl:text>
+        <xsl:value-of select="$spacer"/>
       </xsl:if>
     </xsl:for-each>
     <xsl:text>]</xsl:text>

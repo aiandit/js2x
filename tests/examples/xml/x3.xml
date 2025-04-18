@@ -4,11 +4,11 @@
   </b>
   <c>
     <empty/>
-    <num>1.23</num>
+    <n>1.23</n>
   </c>
   <d>
     <empty/>
-    <num>1.23</num>
-    <str>test</str>
+    <n>1.23</n>
+    <s>test</s>
   </d>
 </a>

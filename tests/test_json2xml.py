@@ -16,22 +16,21 @@ class JSON2XMLTestCase(unittest.TestCase):
         pass
 
     def check_roundtrip(self, source):
-        jsstr = json2xml.xml2json(source)
-        xstr = json2xml.json2xml(jsstr)
-        jsstr2 = json2xml.xml2json(xstr)
-        xstr2 = json2xml.json2xml(jsstr2)
-        print(f'res: {jsstr}')
+        xstr = json2xml.json2xml(source)
+        jsstr = json2xml.xml2json(xstr)
+        xstr2 = json2xml.json2xml(jsstr)
+        jsstr2 = json2xml.xml2json(xstr2)
         print(f'res XML: {xstr}')
-        if jsstr != jsstr2:
-            print('XML could not be rendered without loss to JSON')
+        print(f'res JSON: {jsstr}')
         assert xstr == xstr2
+        assert jsstr == jsstr2
 
     def check_files(self, dirs):
         names = []
         for test_dir in dirs:
             print('Test dir %s' % test_dir)
             for n in os.listdir(test_dir):
-                if n.endswith('.xml') and not n.startswith('bad'):
+                if n.endswith('.json') and not n.startswith('bad'):
                     names.append(os.path.join(test_dir, n))
 
         for filename in names:
@@ -45,7 +44,7 @@ class JSON2XMLTestCase(unittest.TestCase):
 
     example_directories = [
         # search 'tests/examples'
-        os.path.join(os.path.dirname(__file__), 'examples', 'xml')
+        os.path.join(os.path.dirname(__file__), 'examples', 'json')
     ]
 
     def test_files(self):
@@ -53,3 +52,7 @@ class JSON2XMLTestCase(unittest.TestCase):
 
     def test_examples(self):
         self.check_files(self.example_directories)
+
+    def test_objects(self):
+        self.check_roundtrip('{"n": "12"}')
+

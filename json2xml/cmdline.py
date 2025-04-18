@@ -23,14 +23,10 @@ def getparser(prog, description='What the program does', parser=None):
             prog=prog,
             description=description)
     parser.add_argument('filename', nargs='?')
-    parser.add_argument('-e', '--show-empty', action='store_true')
-    parser.add_argument('-f', '--annotate-fields', action='store_true')
     parser.add_argument('-i', '--indent', type=int, const=1, nargs='?',
                         metavar='N', help='Indent output with N spaces')
     parser.add_argument('-o', '--output', type=str, metavar='FILE',
                         help='Write output to FILE')
-    parser.add_argument('-g', '--debug', action='store_true',
-                        help='Keep line number information')
     version = __version__
     parser.add_argument('-v', '--version', action='version', version=f'{prog} {version}')
 
@@ -55,22 +51,7 @@ def processargs(args, parsefun):
     out = sys.stdout
     if args.output:
         out = open(args.output, 'w')
-    debug = True if args.debug else False
 
     pfkw = { k: v for k,v in vars(args).items() if k != 'filename' }
-    if 'debug' in pfkw:
-        pfkw['include_attributes'] = pfkw['debug']
 
-
-    if isinstance(parsefun, list):
-        res = ''
-        for i, pfun in enumerate(parsefun):
-            res = pfun(input, fname, **pfkw)
-            if debug:
-                if isinstance(res, str):
-                    with open(fname + '.' + f'{i}', 'w') as f:
-                        f.write(res)
-            input = res
-        print(res, file=out)
-    else:
-        print(parsefun(input, fname, **pfkw), file=out)
+    print(parsefun(input, fname, **pfkw), file=out)

@@ -1,9 +1,9 @@
 [project]
-name = "json2xml"
+name = "js2x"
 authors = [
   { name="Johannes Willkomm", email="jwillkomm@ai-and-it.de" },
 ]
-description = "Simple Binary Stream Messages"
+description = "Simple JSON to XML transform and back. Transform XML to plain JSON, such that /a/b is found in the JSON as d['a']['b']."
 # readme = "README.rst"
 requires-python = ">=3.7"
 classifiers = [
@@ -20,19 +20,19 @@ test = ["pytest", "tox"]
 all = ["build", "pytest", "tox"]
 
 [project.urls]
-"Homepage" = "https://github.com/aiandit/json2xml"
-"Bug Tracker" = "https://github.com/aiandit/json2xml/issues"
+"Homepage" = "https://github.com/aiandit/js2x"
+"Bug Tracker" = "https://github.com/aiandit/js2x/issues"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project.scripts]
-json2xml = "json2xml.cmdline:json2xmlrun"
-xml2json = "json2xml.cmdline:xml2jsonrun"
+js2x = "js2x.cmdline:js2xrun"
+xml2json = "js2x.cmdline:xml2jsonrun"
 
 [tool.hatch.version]
-path = "json2xml/__init__.py"
+path = "js2x/__init__.py"
 
 #[tool.hatch.build.targets.sdist.hooks.custom]
 #path="plugin.py"

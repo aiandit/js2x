@@ -31,9 +31,6 @@
   </xsl:template>
 
   <xsl:template match="*">
-    <xsl:if test="count(preceding-sibling::*) > 0">
-      <xsl:text>,</xsl:text>
-    </xsl:if>
     <xsl:text>"</xsl:text>
     <xsl:value-of select="local-name()"/>
     <xsl:text>":</xsl:text>
@@ -41,13 +38,13 @@
     <xsl:text>"</xsl:text>
     <xsl:value-of select="."/>
     <xsl:text>"</xsl:text>
+    <xsl:if test="count(following-sibling::*) > 0">
+      <xsl:text>,</xsl:text>
+      <xsl:value-of select="$spacer"/>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="*[* or @_class]">
-    <xsl:apply-templates select="." mode="indent"/>
-    <xsl:if test="count(preceding-sibling::*) > 0">
-      <xsl:text>,</xsl:text>
-    </xsl:if>
     <xsl:apply-templates select="." mode="indent"/>
     <xsl:text>"</xsl:text>
     <xsl:value-of select="local-name()"/>
@@ -66,6 +63,9 @@
       <xsl:text>"</xsl:text>
       <xsl:value-of select="@_class"/>
       <xsl:text>"</xsl:text>
+    </xsl:if>
+    <xsl:if test="count(following-sibling::*) > 0">
+      <xsl:text>,</xsl:text>
     </xsl:if>
   </xsl:template>
 

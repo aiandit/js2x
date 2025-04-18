@@ -112,7 +112,7 @@ def runXSLT(docstr, xsltfname, params={}, base=None):
 
 def xml2json(xmlstr, filename=None, indent=None, **kw):
     ilev = 1 if indent is None else int(indent)
-    indent = 0 if indent is None else 1
+    indent = 0 if indent is None or indent == 0 else 1
     params = dict(indentstr="'%s'" % (' ' * ilev), indent='%d' % indent)
     return runXSLT(xmlstr, 'xsl/xml2json.xsl', params=params)
 

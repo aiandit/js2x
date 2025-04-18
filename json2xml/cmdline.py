@@ -4,55 +4,18 @@ from . import *
 
 from . import __version__
 
-unparsel = lambda x, y, **kw: unparse(x)
-
 infos = dict(
-    py2py=dict(func=lambda x, y, **kw: unparse(loadastpy(x, filename=y, **kw), **kw),
-               desc="Load Python code and pretty-print")
-    , pydump=dict(func=lambda x, y, **kw: ast_dump(loadastpy_raw(x, filename=y), **kw),
-                  desc="Load Python code and dump tree in text form")
-    , py2json=dict(func=lambda x, y, **kw: unparse2j(loadastpy(x, filename=y, **kw), **kw),
-                   desc="Convert Python code to JSON")
-    , py2xml=dict(func=lambda x, y, **kw: unparse2x(loadastpy(x, filename=y, **kw), **kw),
-                  desc="Convert Python code to XML")
-    , json2py=dict(func=lambda x, y, **kw: unparse(loadastj(x, filename=y)),
-                   desc="Convert JSON to Python code")
-    , xml2py=dict(func=lambda x, y, **kw: unparse(loadastx(x, filename=y)),
-                  desc="Convert XML to Python code")
-    , json2xml=dict(func=lambda x, y, **kw: json2xml(x, filename=y, **kw),
-                    desc="Convert JSON to XML")
+    json2xml=dict(func=lambda x, y, **kw: json2xml(x, filename=y, **kw),
+                    desc="Convert JSON to XML (json2xml)")
     , xml2json=dict(func=lambda x, y, **kw: xml2json(x, filename=y, **kw),
-                    desc="Convert XML to JSON")
-    , py2json2xml=dict(func=[loadastpy, unparse2j, json2xml, xml2json, loadastj, unparsel],
-                       desc="Roundtrip to JSON, XML and back. Set -g to dump stages.")
+                    desc="Convert XML to JSON (json2xml)")
 )
-
-def unparse2pyrun():
-    run(prog="py2py")
-
-def pydumprun():
-    run(prog="pydump")
-
-def unparse2jrun():
-    run(prog="py2json")
-
-def unparse2xrun():
-    run(prog="py2xml")
-
-def loadastjrun():
-    run(prog="json2py")
-
-def loadastxrun():
-    run(prog="xml2py")
 
 def json2xmlrun():
     run(prog="json2xml")
 
 def xml2jsonrun():
     run(prog="xml2json")
-
-def py2json2xmlrun():
-    run(prog='py2json2xml')
 
 def getparser(prog, description='What the program does', parser=None):
     if parser is None:

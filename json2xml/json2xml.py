@@ -5,9 +5,21 @@ import lxml.etree
 import os
 import math
 
-from .unparser2j import escapejson
 
 INFSTR = '1e309'
+
+
+replace = {'\\': '\\\\', '\n': '\\n', '\r': '\\r', '\t': '\\t', '"': '\\"'}
+def escapejson(text):
+    for c in replace:
+        if c in text:
+            text = text.replace(c, replace[c])
+    for i in range(0x20):
+        c = chr(i)
+        if c in text:
+            text = text.replace(c, '\\u%04x' % (ord(c),))
+    return text
+
 
 class JSON2XMLPrinter:
     input = {}
@@ -19,10 +31,10 @@ class JSON2XMLPrinter:
     def __init__(self, output=sys.stdout):
         self.output = output
 
-    def __call__(self, dict):
+    def __call__(self, dict, name='dict'):
         self.input = dict
         #self.write('<?xml version="1.0"?>')
-        self.dispatch(dict)
+        self.dispatch(dict, name=name)
 
     def fill(self):
         if self.indent:
@@ -106,9 +118,12 @@ def xml2json(xmlstr, filename=None, indent=None, **kw):
 
 def json2xml(jstr, filename=None, indent=None, **kw):
     jdict = json.loads(jstr)
+    name = 'dict'
+    if isinstance(jdict, dict) and len(jdict) == 1:
+        name, jdict = list(jdict.items())[0]
     output = StringIO()
     jp = JSON2XMLPrinter(output)
     jp.indent = indent
-    jp(jdict)
+    jp(jdict, name=name)
     xstr = output.getvalue()
     return xstr

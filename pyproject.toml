@@ -28,8 +28,8 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project.scripts]
-js2x = "js2x.cmdline:js2xrun"
-xml2json = "js2x.cmdline:xml2jsonrun"
+js2x = "js2x.cmdline:json2xmlrun"
+x2js = "js2x.cmdline:xml2jsonrun"
 
 [tool.hatch.version]
 path = "js2x/__init__.py"

@@ -1,20 +1,20 @@
 <a>
   <b>
     <empty/>
+    <n>2.23</n>
+    <s>test</s>
   </b>
   <b>
     <empty/>
-    <num>1.23</num>
+    <n>3.23</n>
     <c>
-      <empty test="22"/>
-      <num>2.34</num>
-      <str>test</str>
+      <s>test</s>
     </c>
-    <str>test</str>
+    <s>test</s>
   </b>
   <b>
-    <empty test="22"/>
-    <num>2.34</num>
-    <str>test</str>
+    <n>2.34</n>
+    <n>1.23</n>
+    <s>test</s>
   </b>
 </a>

@@ -25,6 +25,8 @@ class JSON2XMLTestCase(unittest.TestCase):
         if jsstr != jsstr2:
             print('XML could not be rendered without loss to JSON')
         assert xstr == xstr2
+        assert "1.23" in jsstr2 if "1.23" in source else True
+        assert "test" in jsstr2 if "test" in source else True
 
     def check_files(self, dirs):
         names = []

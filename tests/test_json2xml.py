@@ -27,6 +27,11 @@ class JSON2XMLTestCase(unittest.TestCase):
         assert "1.23" in jsstr2 if "1.23" in source else True
         assert "test" in jsstr2 if "test" in source else True
 
+        ost = json.loads(jsstr)
+        if 'dict' in ost:
+            ost = ost['dict']
+        assert json.dumps(ost) == json.dumps(json.loads(source))
+
     def check_files(self, dirs):
         names = []
         for test_dir in dirs:

@@ -62,3 +62,15 @@ class JSON2XMLTestCase(unittest.TestCase):
 
     def test_objects(self):
         self.check_roundtrip('{"n": "12"}')
+
+    def test_layout_1(self):
+        xstr = json2xml.json2xml('{}')
+        assert xstr == '<dict></dict>'
+
+    def test_layout_2(self):
+        xstr = json2xml.json2xml('123.45')
+        assert xstr == '<num>123.45</num>'
+
+    def test_layout_3(self):
+        xstr = json2xml.json2xml('"abc"')
+        assert xstr == '<str>abc</str>'

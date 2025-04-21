@@ -10,6 +10,8 @@ INFSTR = '1e309'
 
 
 replace = {'\\': '\\\\', '\n': '\\n', '\r': '\\r', '\t': '\\t', '"': '\\"'}
+
+
 def escapejson(text):
     for c in replace:
         if c in text:
@@ -36,7 +38,7 @@ class JSON2XMLPrinter:
 
     def __call__(self, dict, name='dict'):
         self.input = dict
-        #self.write('<?xml version="1.0"?>')
+        # self.write('<?xml version="1.0"?>')
         self.dispatch(dict, name=name)
 
     def fill(self):
@@ -61,6 +63,7 @@ class JSON2XMLPrinter:
         self.output.write(f'<{name}{attrstr}>')
         self.level += 1
         self.count += 1
+
     def wend(self, name, fill=True):
         self.level -= 1
         if fill:
@@ -68,38 +71,47 @@ class JSON2XMLPrinter:
         self.output.write(f'</{name}>')
 
     def dispatch(self, d, name='dict'):
-        if type(d) == type({}):
-            cname =  d['_class'] if '_class' in d else None
+        if isinstance(d, dict):
+            cname = d['_class'] if '_class' in d else None
             self.wstart(name, {'_class': cname} if cname else {})
             for k in d:
                 if k == '_class':
                     continue
+                if not isinstance(d[k], dict) and not isinstance(d[k], list):
+                    self.wstart(k)
                 self.dispatch(d[k], k)
+                if not isinstance(d[k], dict) and not isinstance(d[k], list):
+                    self.wend(k)
             self.wend(name)
-        elif type(d) == type([]):
+        elif isinstance(d, list):
             self.wstart(name, {'_class': 'list'})
             for k in d:
+                if not isinstance(k, dict) and not isinstance(k, list):
+                    self.wstart('item')
                 self.dispatch(k, name='item')
+                if not isinstance(k, dict) and not isinstance(k, list):
+                    self.wend('item')
             self.wend(name)
-        elif type(d) == type(0) or type(d) == type(0.0):
-            self.wstart(name)
+        elif isinstance(d, int) or isinstance(d, float):
+#            self.wstart(name)
             self.wstart('num')
             if math.isinf(d):
                 self.write(f'{INFSTR}')
             else:
                 self.write(f'{d}')
             self.wend('num', False)
-            self.wend(name)
-        elif type(d) == type(''):
-            self.wstart(name)
+#            self.wend(name)
+        elif isinstance(d, str):
+#            self.wstart(name)
             self.wstart('str')
             self.write(escapejson(d.replace('&', '&amp;').replace('<', '&lt;')))
             self.wend('str', False)
-            self.wend(name)
+#            self.wend(name)
         else:
-            self.wstart(name)
+#            self.wstart(name)
             self.write(json.dumps(d))
-            self.wend(name, False)
+#            self.wend(name)
+
 
 def runXSLT(docstr, xsltfname, params={}, base=None):
     if not os.path.isabs(xsltfname):
@@ -114,17 +126,21 @@ def runXSLT(docstr, xsltfname, params={}, base=None):
     result = transform(xmldoc, **params)
     return str(result)
 
+
 def xml2json(xmlstr, filename=None, indent=None, **kw):
     ilev = 1 if indent is None else int(indent)
     indent = 0 if indent is None or indent == 0 else 1
     params = dict(indentstr="'%s'" % (' ' * ilev), indent='%d' % indent)
     return runXSLT(xmlstr, 'xsl/xml2json.xsl', params=params)
 
+
 def json2xml(jstr, filename=None, indent=None, **kw):
     jdict = json.loads(jstr)
     name = 'dict'
     if isinstance(jdict, dict) and len(jdict) == 1:
-        name, jdict = list(jdict.items())[0]
+        c1, c2 = list(jdict.items())[0]
+        if isinstance(c2, dict):
+            name, jdict = c1, c2
     output = StringIO()
     jp = JSON2XMLPrinter(output)
     jp.indent = indent

@@ -27,6 +27,11 @@ class JSON2XMLTestCase(unittest.TestCase):
         assert "1.23" in jsstr2 if "1.23" in source else True
         assert "test" in jsstr2 if "test" in source else True
 
+        ost = json.loads(jsstr)
+        if isinstance(ost, dict) and 'dict' in ost and isinstance(ost['dict'], dict):
+            ost = ost['dict']
+        assert json.dumps(ost) == json.dumps(json.loads(source))
+
     def check_files(self, dirs):
         names = []
         for test_dir in dirs:
@@ -58,3 +63,14 @@ class JSON2XMLTestCase(unittest.TestCase):
     def test_objects(self):
         self.check_roundtrip('{"n": "12"}')
 
+    def test_layout_1(self):
+        xstr = json2xml.json2xml('{}')
+        assert xstr == '<dict></dict>'
+
+    def test_layout_2(self):
+        xstr = json2xml.json2xml('123.45')
+        assert xstr == '<num>123.45</num>'
+
+    def test_layout_3(self):
+        xstr = json2xml.json2xml('"abc"')
+        assert xstr == '<str>abc</str>'

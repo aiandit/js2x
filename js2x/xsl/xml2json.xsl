@@ -30,12 +30,23 @@
     </xsl:if>
   </xsl:template>
 
+
   <xsl:template match="/">
+    <xsl:apply-templates select="*" mode="top"/>
+  </xsl:template>
+
+  <xsl:template match="*" mode="top">
     <xsl:text>{</xsl:text>
-    <xsl:apply-templates/>
-    <xsl:apply-templates select="." mode="indent"/>
+    <xsl:apply-templates select="."/>
+    <xsl:apply-templates select=".." mode="indent"/>
     <xsl:text>}</xsl:text>
   </xsl:template>
+
+  <xsl:template match="num|str" mode="top">
+    <xsl:apply-templates select="."/>
+    <xsl:apply-templates select=".." mode="indent"/>
+  </xsl:template>
+
 
   <xsl:template match="*">
     <xsl:apply-templates select="." mode="indent"/>

@@ -77,32 +77,40 @@ class JSON2XMLPrinter:
             for k in d:
                 if k == '_class':
                     continue
+                if not isinstance(d[k], dict) and not isinstance(d[k], list):
+                    self.wstart(k)
                 self.dispatch(d[k], k)
+                if not isinstance(d[k], dict) and not isinstance(d[k], list):
+                    self.wend(k)
             self.wend(name)
         elif isinstance(d, list):
             self.wstart(name, {'_class': 'list'})
             for k in d:
+                if not isinstance(k, dict) and not isinstance(k, list):
+                    self.wstart('item')
                 self.dispatch(k, name='item')
+                if not isinstance(k, dict) and not isinstance(k, list):
+                    self.wend('item')
             self.wend(name)
         elif isinstance(d, int) or isinstance(d, float):
-            self.wstart(name)
+#            self.wstart(name)
             self.wstart('num')
             if math.isinf(d):
                 self.write(f'{INFSTR}')
             else:
                 self.write(f'{d}')
             self.wend('num', False)
-            self.wend(name)
+#            self.wend(name)
         elif isinstance(d, str):
-            self.wstart(name)
+#            self.wstart(name)
             self.wstart('str')
             self.write(escapejson(d.replace('&', '&amp;').replace('<', '&lt;')))
             self.wend('str', False)
-            self.wend(name)
+#            self.wend(name)
         else:
-            self.wstart(name)
+#            self.wstart(name)
             self.write(json.dumps(d))
-            self.wend(name, False)
+#            self.wend(name)
 
 
 def runXSLT(docstr, xsltfname, params={}, base=None):
@@ -130,7 +138,9 @@ def json2xml(jstr, filename=None, indent=None, **kw):
     jdict = json.loads(jstr)
     name = 'dict'
     if isinstance(jdict, dict) and len(jdict) == 1:
-        name, jdict = list(jdict.items())[0]
+        c1, c2 = list(jdict.items())[0]
+        if isinstance(c2, dict) or True:
+            name, jdict = c1, c2
     output = StringIO()
     jp = JSON2XMLPrinter(output)
     jp.indent = indent

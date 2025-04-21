@@ -62,4 +62,3 @@ class JSON2XMLTestCase(unittest.TestCase):
 
     def test_objects(self):
         self.check_roundtrip('{"n": "12"}')
-

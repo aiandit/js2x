@@ -1,3 +1,9 @@
+js2x (25.4-1) unstable; urgency=medium
+
+  * Escape certain chars in JSON strings
+
+ -- Johannes Willkomm <johannes.willkomm@googlemail.com>  Sun, 27 Apr 2025 19:06:55 +0200
+
 js2x (25.3-1) unstable; urgency=medium
 
   * New tests

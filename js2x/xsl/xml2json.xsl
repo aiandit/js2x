@@ -31,6 +31,38 @@
   </xsl:template>
 
 
+  <xsl:template name="replace">
+    <xsl:param name="str" select="''"/>
+    <xsl:param name="match" select="'abc'"/>
+    <xsl:param name="repl" select="'xyz'"/>
+    <xsl:choose>
+      <xsl:when test="string-length($str) > 0 and contains($str, $match)">
+        <xsl:variable name="nstr" select="substring-after($str, $match)"/>
+        <xsl:variable name="bef" select="substring-before($str, $match)"/>
+        <xsl:value-of select="$bef"/>
+        <xsl:value-of select="$repl"/>
+        <xsl:call-template name="replace">
+          <xsl:with-param name="str" select="$nstr"/>
+          <xsl:with-param name="match" select="match"/>
+          <xsl:with-param name="repl" select="$repl"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$str"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="escape-json">
+    <xsl:param name="str" select="''"/>
+    <xsl:call-template name="replace">
+      <xsl:with-param name="str" select="$str"/>
+      <xsl:with-param name="match" select="'&#xa;'"/>
+      <xsl:with-param name="repl" select="'\n'"/>
+    </xsl:call-template>
+  </xsl:template>
+
+
   <xsl:template match="/">
     <xsl:apply-templates select="*" mode="top"/>
   </xsl:template>
@@ -57,7 +89,9 @@
     <xsl:choose>
       <xsl:when test="text()">
         <xsl:text>"</xsl:text>
-        <xsl:value-of select="."/>
+        <xsl:call-template name="escape-json">
+          <xsl:with-param name="str" select="."/>
+        </xsl:call-template>
         <xsl:text>"</xsl:text>
       </xsl:when>
       <xsl:otherwise>
@@ -141,7 +175,9 @@
 
   <xsl:template match="str[count(../*)=1]">
     <xsl:text>"</xsl:text>
-    <xsl:value-of select="."/>
+    <xsl:call-template name="escape-json">
+      <xsl:with-param name="str" select="."/>
+    </xsl:call-template>
     <xsl:text>"</xsl:text>
   </xsl:template>
 

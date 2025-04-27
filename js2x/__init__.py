@@ -2,4 +2,4 @@
 
 from .json2xml import xml2json, json2xml
 
-__version__ = '25.3'
+__version__ = '25.4'

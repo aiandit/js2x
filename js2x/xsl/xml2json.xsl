@@ -32,7 +32,7 @@
 
 
   <xsl:template name="replace">
-    <xsl:param name="str" select="''"/>
+    <xsl:param name="str"/>
     <xsl:param name="match" select="'abc'"/>
     <xsl:param name="repl" select="'xyz'"/>
     <xsl:choose>
@@ -43,7 +43,7 @@
         <xsl:value-of select="$repl"/>
         <xsl:call-template name="replace">
           <xsl:with-param name="str" select="$nstr"/>
-          <xsl:with-param name="match" select="match"/>
+          <xsl:with-param name="match" select="$match"/>
           <xsl:with-param name="repl" select="$repl"/>
         </xsl:call-template>
       </xsl:when>
@@ -54,9 +54,27 @@
   </xsl:template>
 
   <xsl:template name="escape-json">
-    <xsl:param name="str" select="''"/>
+    <xsl:param name="str"/>
     <xsl:call-template name="replace">
-      <xsl:with-param name="str" select="$str"/>
+      <xsl:with-param name="str">
+        <xsl:call-template name="replace">
+          <xsl:with-param name="str">
+            <xsl:call-template name="replace">
+              <xsl:with-param name="str">
+                <xsl:call-template name="replace">
+                  <xsl:with-param name="str" select="$str"/>
+                  <xsl:with-param name="match" select="'&#x9;'"/>
+                  <xsl:with-param name="repl" select="'\t'"/>
+                </xsl:call-template>
+              </xsl:with-param>
+              <xsl:with-param name="match">"</xsl:with-param>
+              <xsl:with-param name="repl">\"</xsl:with-param>
+            </xsl:call-template>
+          </xsl:with-param>
+          <xsl:with-param name="match" select="'&#xd;'"/>
+          <xsl:with-param name="repl" select="'\r'"/>
+        </xsl:call-template>
+      </xsl:with-param>
       <xsl:with-param name="match" select="'&#xa;'"/>
       <xsl:with-param name="repl" select="'\n'"/>
     </xsl:call-template>

@@ -104,7 +104,7 @@ class JSON2XMLPrinter:
         elif isinstance(d, str):
 #            self.wstart(name)
             self.wstart('str')
-            self.write(escapejson(d.replace('&', '&amp;').replace('<', '&lt;')))
+            self.write(d.replace('&', '&amp;').replace('<', '&lt;'))
             self.wend('str', False)
 #            self.wend(name)
         else:

@@ -170,6 +170,10 @@
     <xsl:text>{}</xsl:text>
   </xsl:template>
 
+  <xsl:template match="item[@_class]" mode="in-list">
+    <xsl:apply-templates select="." mode="list-body"/>
+  </xsl:template>
+
   <xsl:template match="*" mode="in-list">
     <xsl:apply-templates select="."/>
   </xsl:template>
@@ -209,6 +213,10 @@
     <xsl:value-of select="local-name()"/>
     <xsl:text>":</xsl:text>
     <xsl:value-of select="$spacer"/>
+    <xsl:apply-templates select="." mode="list-body"/>
+  </xsl:template>
+
+  <xsl:template match="*[@_class = 'list']" mode="list-body">
     <xsl:text>[</xsl:text>
     <xsl:for-each select="*">
       <xsl:apply-templates select="." mode="in-list"/>

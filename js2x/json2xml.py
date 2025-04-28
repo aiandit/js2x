@@ -139,7 +139,7 @@ def json2xml(jstr, filename=None, indent=None, **kw):
     name = 'dict'
     if isinstance(jdict, dict) and len(jdict) == 1:
         c1, c2 = list(jdict.items())[0]
-        if isinstance(c2, dict):
+        if isinstance(c2, dict) or isinstance(c2, list):
             name, jdict = c1, c2
     output = StringIO()
     jp = JSON2XMLPrinter(output)

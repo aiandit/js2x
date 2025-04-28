@@ -28,7 +28,8 @@ class JSON2XMLTestCase(unittest.TestCase):
         assert "test" in jsstr2 if "test" in source else True
 
         ost = json.loads(jsstr)
-        if isinstance(ost, dict) and 'dict' in ost and isinstance(ost['dict'], dict):
+        if isinstance(ost, dict) and 'dict' in ost and \
+           (isinstance(ost['dict'], dict) or isinstance(ost['dict'], list)):
             ost = ost['dict']
         assert json.dumps(ost) == json.dumps(json.loads(source))
 

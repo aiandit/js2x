@@ -20,8 +20,9 @@ class JSON2XMLTestCase(unittest.TestCase):
         jsstr = json2xml.xml2json(xstr)
         xstr2 = json2xml.json2xml(jsstr)
         jsstr2 = json2xml.xml2json(xstr2)
-        print(f'res XML: {xstr}')
-        print(f'res JSON: {jsstr}')
+        if len(xstr) < 250:
+            print(f'res XML: {xstr}')
+            print(f'res JSON: {jsstr}')
         assert xstr == xstr2
         assert jsstr == jsstr2
         assert "1.23" in jsstr2 if "1.23" in source else True
@@ -36,13 +37,13 @@ class JSON2XMLTestCase(unittest.TestCase):
     def check_files(self, dirs):
         names = []
         for test_dir in dirs:
-            print('Test dir %s' % test_dir)
+            print('\n\n* Test dir %s' % test_dir)
             for n in os.listdir(test_dir):
                 if n.endswith('.json') and not n.startswith('bad'):
                     names.append(os.path.join(test_dir, n))
 
         for filename in names:
-            print('Testing %s' % filename)
+            print('\n** Test file %s' % filename)
             source = read_file(filename)
             self.check_roundtrip(source)
 
@@ -52,7 +53,8 @@ class JSON2XMLTestCase(unittest.TestCase):
 
     example_directories = [
         # search 'tests/examples'
-        os.path.join(os.path.dirname(__file__), 'examples', 'json')
+        os.path.join(os.path.dirname(__file__), 'examples', 'json'),
+        os.path.join(os.path.dirname(__file__), 'examples', 'json', 'system')
     ]
 
     def test_files(self):

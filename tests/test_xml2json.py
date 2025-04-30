@@ -10,7 +10,7 @@ def read_file(filename):
         source = pyfile.read()
     return source
 
-class JSON2XMLTestCase(unittest.TestCase):
+class XML2JSONTestCase(unittest.TestCase):
 
     def setUp(self):
         pass

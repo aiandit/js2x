@@ -1,3 +1,12 @@
+js2x (25.5-1) unstable; urgency=medium
+
+  * Handle lists correctly
+  * Make sure XML element names are valid
+  * Handle boolean and null JSON values
+  * New tests
+
+ -- Johannes Willkomm <johannes.willkomm@googlemail.com>  Sun, 04 May 2025 18:08:25 +0200
+
 js2x (25.4-1) unstable; urgency=medium
 
   * Escape certain chars in JSON strings

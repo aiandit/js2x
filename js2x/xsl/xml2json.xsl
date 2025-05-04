@@ -56,27 +56,33 @@
   <xsl:template name="escape-json">
     <xsl:param name="str"/>
     <xsl:call-template name="replace">
-      <xsl:with-param name="str">
-        <xsl:call-template name="replace">
-          <xsl:with-param name="str">
-            <xsl:call-template name="replace">
-              <xsl:with-param name="str">
-                <xsl:call-template name="replace">
-                  <xsl:with-param name="str" select="$str"/>
-                  <xsl:with-param name="match" select="'&#x9;'"/>
-                  <xsl:with-param name="repl" select="'\t'"/>
-                </xsl:call-template>
-              </xsl:with-param>
-              <xsl:with-param name="match">"</xsl:with-param>
-              <xsl:with-param name="repl">\"</xsl:with-param>
-            </xsl:call-template>
-          </xsl:with-param>
-          <xsl:with-param name="match" select="'&#xd;'"/>
-          <xsl:with-param name="repl" select="'\r'"/>
-        </xsl:call-template>
-      </xsl:with-param>
       <xsl:with-param name="match" select="'&#xa;'"/>
       <xsl:with-param name="repl" select="'\n'"/>
+      <xsl:with-param name="str">
+        <xsl:call-template name="replace">
+          <xsl:with-param name="match" select="'&#xd;'"/>
+          <xsl:with-param name="repl" select="'\r'"/>
+          <xsl:with-param name="str">
+            <xsl:call-template name="replace">
+              <xsl:with-param name="match">"</xsl:with-param>
+              <xsl:with-param name="repl">\"</xsl:with-param>
+              <xsl:with-param name="str">
+                <xsl:call-template name="replace">
+                  <xsl:with-param name="match" select="'&#x9;'"/>
+                  <xsl:with-param name="repl" select="'\t'"/>
+                  <xsl:with-param name="str">
+                    <xsl:call-template name="replace">
+                      <xsl:with-param name="match" select="'\'"/>
+                      <xsl:with-param name="repl" select="'\\'"/>
+                      <xsl:with-param name="str" select="$str"/>
+                    </xsl:call-template>
+                  </xsl:with-param>
+                </xsl:call-template>
+              </xsl:with-param>
+            </xsl:call-template>
+          </xsl:with-param>
+        </xsl:call-template>
+      </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
 
@@ -92,7 +98,7 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
 
-  <xsl:template match="num|str" mode="top">
+  <xsl:template match="num|str|bool" mode="top">
     <xsl:apply-templates select="."/>
     <xsl:apply-templates select=".." mode="indent"/>
   </xsl:template>
@@ -170,15 +176,19 @@
     <xsl:text>{}</xsl:text>
   </xsl:template>
 
+  <xsl:template match="item[@_class]" mode="in-list">
+    <xsl:apply-templates select="." mode="list-body"/>
+  </xsl:template>
+
   <xsl:template match="*" mode="in-list">
     <xsl:apply-templates select="."/>
   </xsl:template>
 
-  <xsl:template match="*[str|num and count(*) = 1]" mode="in-list">
+  <xsl:template match="*[str|num|bool|null and count(*) = 1]" mode="in-list">
     <xsl:apply-templates select="*"/>
   </xsl:template>
 
-  <xsl:template match="*[str|num and count(*) = 1]">
+  <xsl:template match="*[str|num|bool|null and count(*) = 1]">
     <xsl:apply-templates select="." mode="indent"/>
     <xsl:text>"</xsl:text>
     <xsl:value-of select="local-name()"/>
@@ -203,12 +213,30 @@
     <xsl:value-of select="."/>
   </xsl:template>
 
+  <xsl:template match="bool[count(../*)=1]">
+    <xsl:value-of select="."/>
+  </xsl:template>
+
+  <xsl:template match="null[count(../*)=1]">
+    <xsl:value-of select="'null'"/>
+  </xsl:template>
+
   <xsl:template match="*[@_class = 'list']">
     <xsl:apply-templates select="." mode="indent"/>
     <xsl:text>"</xsl:text>
     <xsl:value-of select="local-name()"/>
     <xsl:text>":</xsl:text>
     <xsl:value-of select="$spacer"/>
+    <xsl:apply-templates select="." mode="list-body"/>
+    <xsl:if test="count(following-sibling::*) > 0">
+      <xsl:text>,</xsl:text>
+      <xsl:if test="not($indent)">
+        <xsl:value-of select="$spacer"/>
+      </xsl:if>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="*[@_class = 'list']" mode="list-body">
     <xsl:text>[</xsl:text>
     <xsl:for-each select="*">
       <xsl:apply-templates select="." mode="in-list"/>

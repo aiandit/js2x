@@ -50,10 +50,21 @@ class JSON2XMLPrinter:
     def write(self, str):
         self.output.write(str)
 
+    def validxmlname(self, name):
+        if len(name) == 0:
+            name = 'x'
+        elif name[0] in '0123456789-.':
+            name = 'x-' + name
+        invalidChars = '[]@&$$+/:›➞➔✿✩➨➡❥➽➹➯^*'
+        for i, c in enumerate(invalidChars):
+            name = name.replace(c, f'_{i+1:02d}')
+        return name
+
     def welem(self, name, content):
         self.output.write(f'<{name}>{content}</{name}>')
 
     def wstart(self, name, attrs={}):
+        name = self.validxmlname(name)
         self.fill()
         attrstr = ''
         for a in attrs:
@@ -65,6 +76,7 @@ class JSON2XMLPrinter:
         self.count += 1
 
     def wend(self, name, fill=True):
+        name = self.validxmlname(name)
         self.level -= 1
         if fill:
             self.fill()
@@ -92,6 +104,13 @@ class JSON2XMLPrinter:
                 if not isinstance(k, dict) and not isinstance(k, list):
                     self.wend('item')
             self.wend(name)
+        elif isinstance(d, bool):
+            self.wstart('bool')
+            self.write(f'{d}'.lower())
+            self.wend('bool', False)
+        elif d is None:
+            self.wstart('null')
+            self.wend('null', False)
         elif isinstance(d, int) or isinstance(d, float):
 #            self.wstart(name)
             self.wstart('num')
@@ -139,7 +158,7 @@ def json2xml(jstr, filename=None, indent=None, **kw):
     name = 'dict'
     if isinstance(jdict, dict) and len(jdict) == 1:
         c1, c2 = list(jdict.items())[0]
-        if isinstance(c2, dict):
+        if isinstance(c2, dict) or isinstance(c2, list):
             name, jdict = c1, c2
     output = StringIO()
     jp = JSON2XMLPrinter(output)

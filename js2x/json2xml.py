@@ -50,10 +50,21 @@ class JSON2XMLPrinter:
     def write(self, str):
         self.output.write(str)
 
+    def validxmlname(self, name):
+        if len(name) == 0:
+            name = 'x'
+        elif name[0] in '0123456789-.':
+            name = 'x-' + name
+        invalidChars = '[]@&$$+/:›➞➔✿✩➨➡❥➽➹➯^*'
+        for i, c in enumerate(invalidChars):
+            name = name.replace(c, f'_{i+1:02d}')
+        return name
+
     def welem(self, name, content):
         self.output.write(f'<{name}>{content}</{name}>')
 
     def wstart(self, name, attrs={}):
+        name = self.validxmlname(name)
         self.fill()
         attrstr = ''
         for a in attrs:
@@ -65,6 +76,7 @@ class JSON2XMLPrinter:
         self.count += 1
 
     def wend(self, name, fill=True):
+        name = self.validxmlname(name)
         self.level -= 1
         if fill:
             self.fill()

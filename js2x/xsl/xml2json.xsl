@@ -56,27 +56,33 @@
   <xsl:template name="escape-json">
     <xsl:param name="str"/>
     <xsl:call-template name="replace">
-      <xsl:with-param name="str">
-        <xsl:call-template name="replace">
-          <xsl:with-param name="str">
-            <xsl:call-template name="replace">
-              <xsl:with-param name="str">
-                <xsl:call-template name="replace">
-                  <xsl:with-param name="str" select="$str"/>
-                  <xsl:with-param name="match" select="'&#x9;'"/>
-                  <xsl:with-param name="repl" select="'\t'"/>
-                </xsl:call-template>
-              </xsl:with-param>
-              <xsl:with-param name="match">"</xsl:with-param>
-              <xsl:with-param name="repl">\"</xsl:with-param>
-            </xsl:call-template>
-          </xsl:with-param>
-          <xsl:with-param name="match" select="'&#xd;'"/>
-          <xsl:with-param name="repl" select="'\r'"/>
-        </xsl:call-template>
-      </xsl:with-param>
       <xsl:with-param name="match" select="'&#xa;'"/>
       <xsl:with-param name="repl" select="'\n'"/>
+      <xsl:with-param name="str">
+        <xsl:call-template name="replace">
+          <xsl:with-param name="match" select="'&#xd;'"/>
+          <xsl:with-param name="repl" select="'\r'"/>
+          <xsl:with-param name="str">
+            <xsl:call-template name="replace">
+              <xsl:with-param name="match">"</xsl:with-param>
+              <xsl:with-param name="repl">\"</xsl:with-param>
+              <xsl:with-param name="str">
+                <xsl:call-template name="replace">
+                  <xsl:with-param name="match" select="'&#x9;'"/>
+                  <xsl:with-param name="repl" select="'\t'"/>
+                  <xsl:with-param name="str">
+                    <xsl:call-template name="replace">
+                      <xsl:with-param name="match" select="'\'"/>
+                      <xsl:with-param name="repl" select="'\\'"/>
+                      <xsl:with-param name="str" select="$str"/>
+                    </xsl:call-template>
+                  </xsl:with-param>
+                </xsl:call-template>
+              </xsl:with-param>
+            </xsl:call-template>
+          </xsl:with-param>
+        </xsl:call-template>
+      </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
 

@@ -104,6 +104,13 @@ class JSON2XMLPrinter:
                 if not isinstance(k, dict) and not isinstance(k, list):
                     self.wend('item')
             self.wend(name)
+        elif isinstance(d, bool):
+            self.wstart('bool')
+            self.write(f'{d}'.lower())
+            self.wend('bool', False)
+        elif d is None:
+            self.wstart('null')
+            self.wend('null', False)
         elif isinstance(d, int) or isinstance(d, float):
 #            self.wstart(name)
             self.wstart('num')

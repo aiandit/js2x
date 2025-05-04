@@ -15,7 +15,7 @@ class JSON2XMLTestCase(unittest.TestCase):
     def setUp(self):
         pass
 
-    def check_roundtrip(self, source):
+    def check_roundtrip(self, source, origRestored=True):
         xstr = json2xml.json2xml(source)
         jsstr = json2xml.xml2json(xstr)
         xstr2 = json2xml.json2xml(jsstr)
@@ -28,13 +28,14 @@ class JSON2XMLTestCase(unittest.TestCase):
         assert "1.23" in jsstr2 if "1.23" in source else True
         assert "test" in jsstr2 if "test" in source else True
 
-        ost = json.loads(jsstr)
-        if isinstance(ost, dict) and 'dict' in ost and \
-           (isinstance(ost['dict'], dict) or isinstance(ost['dict'], list)):
-            ost = ost['dict']
-        assert json.dumps(ost) == json.dumps(json.loads(source))
+        if origRestored:
+            ost = json.loads(jsstr)
+            if isinstance(ost, dict) and 'dict' in ost and \
+               (isinstance(ost['dict'], dict) or isinstance(ost['dict'], list)):
+                ost = ost['dict']
+            assert json.dumps(ost) == json.dumps(json.loads(source))
 
-    def check_files(self, dirs):
+    def check_files(self, dirs, origRestored=True):
         names = []
         for test_dir in dirs:
             print('\n\n* Test dir %s' % test_dir)
@@ -45,7 +46,7 @@ class JSON2XMLTestCase(unittest.TestCase):
         for filename in names:
             print('\n** Test file %s' % filename)
             source = read_file(filename)
-            self.check_roundtrip(source)
+            self.check_roundtrip(source, origRestored=origRestored)
 
     sys_directories = [
         name for name in sys.path if os.path.exists(name)
@@ -57,11 +58,18 @@ class JSON2XMLTestCase(unittest.TestCase):
         os.path.join(os.path.dirname(__file__), 'examples', 'json', 'system')
     ]
 
+    bad_example_directories = [
+        os.path.join(os.path.dirname(__file__), 'examples', 'json', 'system', 'bad')
+    ]
+
     def test_files(self):
         self.check_files(self.sys_directories)
 
     def test_examples(self):
         self.check_files(self.example_directories)
+
+    def test_bad_examples(self):
+        self.check_files(self.bad_example_directories, False)
 
     def test_objects(self):
         self.check_roundtrip('{"n": "12"}')

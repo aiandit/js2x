@@ -39,6 +39,7 @@ class JSON2XMLTestCase(unittest.TestCase):
         names = []
         for test_dir in dirs:
             print('\n\n* Test dir %s' % test_dir)
+            if not os.path.exists(test_dir): continue
             for n in os.listdir(test_dir):
                 if n.endswith('.json') and not n.startswith('bad'):
                     names.append(os.path.join(test_dir, n))

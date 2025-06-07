@@ -6,7 +6,7 @@ import unittest
 import js2x as json2xml
 
 def read_file(filename):
-    with open(filename, "r") as pyfile:
+    with open(filename, "rb") as pyfile:
         source = pyfile.read()
     return source
 
@@ -25,8 +25,8 @@ class XML2JSONTestCase(unittest.TestCase):
         if jsstr != jsstr2:
             print('XML could not be rendered without loss to JSON')
         assert xstr == xstr2
-        assert "1.23" in jsstr2 if "1.23" in source else True
-        assert "test" in jsstr2 if "test" in source else True
+        assert "1.23" in jsstr2 if b"1.23" in source else True
+        assert "test" in jsstr2 if b"test" in source else True
 
     def check_files(self, dirs):
         names = []

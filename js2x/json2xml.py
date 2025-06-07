@@ -137,7 +137,7 @@ def runXSLT(docstr, xsltfname, params={}, base=None):
         if base is None:
             base = os.path.dirname(sys.modules[__name__].__file__)
         xsltfname = os.path.join(base, xsltfname)
-    with open(xsltfname) as f:
+    with open(xsltfname, 'rb') as f:
         xsltstr = f.read()
     xsltdoc = lxml.etree.fromstring(xsltstr)
     transform = lxml.etree.XSLT(xsltdoc)

@@ -54,7 +54,7 @@ def processargs(args, parsefun):
         fname = 'stdin'
     else:
         fname = args.filename
-        input = open(args.filename).read()
+        input = open(args.filename, 'rb').read()
     out = sys.stdout
     if args.output:
         out = open(args.output, 'w')

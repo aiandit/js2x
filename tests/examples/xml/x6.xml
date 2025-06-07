@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<a>
+  <b>
+    <empty/>
+  </b>
+  <c>
+    <empty/>
+    <n>1.23 a"
+</n>
+  </c>
+  <d>
+    <empty/>
+    <n>1.23 b	    
+</n>
+    <s>test</s>
+  </d>
+</a>

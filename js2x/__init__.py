@@ -2,4 +2,5 @@
 
 from .json2xml import xml2json, json2xml
 
-__version__ = '25.6'
+__version__ = '25.11'
+__commit__ = ""

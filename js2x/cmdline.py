@@ -5,6 +5,7 @@ import argparse
 from .json2xml import json2xml, xml2json
 
 from . import __version__
+from . import __commit__
 
 infos = dict(
     js2x=dict(func=lambda x, y, **kw: json2xml(x, filename=y, **kw),
@@ -32,8 +33,8 @@ def getparser(prog, description='What the program does', parser=None):
                         metavar='N', help='Indent output with N spaces')
     parser.add_argument('-o', '--output', type=str, metavar='FILE',
                         help='Write output to FILE')
-    version = __version__
-    parser.add_argument('-v', '--version', action='version', version=f'{prog} {version}')
+    parser.add_argument('-V', '--version', action="version", version=f"%(prog)s v{__version__} ({__commit__[0:6]})",
+                        help='show %(prog)s\'s version number and exit')
 
     return parser
 

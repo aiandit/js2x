@@ -32,7 +32,7 @@ lint:
 	$(PYTHON) -m flake8 --color=never --max-line-length=120 --ignore=F821,F401 js2x
 	$(PYTHON) -m flake8 --color=never --max-line-length=120 --ignore=E201,E202,E211,E226,E227,E231,E265,E302,E303,E305,E306,F401,E402,F821,F841 tests
 
-test:
+check test:
 #	./tests/test_cmdline.sh
 	tox
 
@@ -42,7 +42,11 @@ coverage:
 docs:
 	tox -e docs
 
-dist:
+update-hooks:
+	rm js2x/__init__.py
+	git checkout -- js2x/__init__.py
+
+dist: update-hooks
 	python -m build .
 
 PIP ?= pip

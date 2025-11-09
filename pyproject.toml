@@ -33,6 +33,3 @@ x2js = "js2x.cmdline:xml2jsonrun"
 
 [tool.hatch.version]
 path = "js2x/__init__.py"
-
-#[tool.hatch.build.targets.sdist.hooks.custom]
-#path="plugin.py"
